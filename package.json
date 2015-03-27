@@ -1,0 +1,28 @@
+{
+  "name": "create-dataset",
+  "version": "1.0.0",
+  "author": "Matthieu Bacconnier <matthieu@anyfetch.com>",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive -R spec test/ -t 5000",
+    "lint": "jshint bin/ config/ data/ lib/ script/ test/ app.js && jscs bin/ config/ data/ lib/ script/ test/ app.js"
+  },
+  "main": "./lib/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnyFetch/create-dataset"
+  },
+  "dependencies": {
+    "factory-lady": "^0.1.0"
+  },
+  "devDependencies": {
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0",
+    "mocha-mongoose": "^1.0.3",
+    "should": "^5.0.0",
+    "sinon": "^1.12.2"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
