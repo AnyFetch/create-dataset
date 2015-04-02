@@ -75,3 +75,22 @@ There is only one mandatory key, `generator`, which must indicate how to create 
 Other keys:
 
 * `dependencies`, an array of models to build before building this object. When unspecified, no dependencies are implied. Be careful not to introduce deadlocks here (A needs B and B needs A)
+
+## How does it works? And potential caveats
+For the sake of simplicity, the key name in your dataset is loosely matched with a model name. For instance, `mainCompany` will be matched to `company`.
+
+This can be problematic when the name is ambiguous, for instance `myUserCompany`. In such a case, the first key to match in your config will be used (in this case, `Company`).
+If this is not enough, you can add a `_model` property to your dataset to force the use of a model:
+
+```js
+var rawDataset = {
+    // Will be matched with 'company' config
+    startup: {
+        _model: 'company'
+    },
+    // !! Will be matched with `user`, as `user` is defined before `profile` in createDataset.config
+    userProfile: {
+
+    }
+}
+```
