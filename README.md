@@ -35,7 +35,7 @@ var rawDataset = {
     }
 };
 
-createDataset.apply(rawDataset, dataset, function(err, dataset) {
+createDataset(rawDataset, function(err, dataset) {
     // At this point, we're all set, one can do
     console.log(dataset.user.id);
     dataset.company.save();
@@ -93,4 +93,39 @@ var rawDataset = {
 
     }
 }
+```
+
+## Advanced use
+### Build over seed object
+When calling `createDataset`, you may want to build over a pre-existing object.
+
+You may then add a second parameter to `createDataset`, specifying the "seed object" on which to build:
+
+```js
+var dataset = {
+    hello: 'lol'
+};
+var rawDataset = { /* ... */};
+
+createDataset(rawDataset, dataset, function(err, dataset) {
+    console.log(dataset.hello);
+});
+```
+
+### Wrap with apply
+You may also want to wrap the whole function in a simple `function(err){}`, for use with `async` or Mongoose's `before`. You can simply use `.apply`:
+
+```js
+var dataset = {
+    hello: 'lol'
+};
+var rawDataset = { /* ... */};
+
+before(createDataset.apply(rawDataset, dataset));
+
+// which is equivalent to...
+
+before(function(done) {
+    createDataset(rawDataset, dataset, done);
+});
 ```
