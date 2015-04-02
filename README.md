@@ -51,21 +51,27 @@ You only need to call this once.
 var createDataset = require('create-dataset');
 createDataset.config = {
     company: {
-        generator: function(data) {
-            return CompanyFactory.create(data);
+        generator: function(data, cb) {
+            cb(null, CompanyFactory.create(data));
         }
     },
     user: {
         dependencies: ['company'],
-        generator: function(data) {
-            return UserFactory.create(data);
+        generator: function(data, cb) {
+            cb(null, UserFactory.create(data));
         }
     },
     profile: {
-        dependencies: ['company'],
-        generator: function(data) {
-            return ProfileFactory.create(data);
+        dependencies: ['user'],
+        generator: function(data, cb) {
+            cb(null, ProfileFactory.create(data));
         }
     }
 };
 ```
+
+There is only one mandatory key, `generator`, which must indicate how to create an instance from raw data. This can be a call to your factory builder, your ORM or your own custom function. It must return a new item (or an error following node convention).
+
+Other keys:
+
+* `dependencies`, an array of models to build before building this object. When unspecified, no dependencies are implied. Be careful not to introduce deadlocks here (A needs B and B needs A)
