@@ -105,10 +105,14 @@ You may then add a second parameter to `createDataset`, specifying the "seed obj
 var dataset = {
     hello: 'lol'
 };
-var rawDataset = { /* ... */};
+var rawDataset = {
+    company: {}
+    /* ... */
+};
 
 createDataset(rawDataset, dataset, function(err, dataset) {
-    console.log(dataset.hello);
+    console.log(dataset.hello); // "lol"
+    console.log(dataset.company); // [object Object]
 });
 ```
 
@@ -119,7 +123,7 @@ You may also want to wrap the whole function in a simple `function(err){}`, for 
 var dataset = {
     hello: 'lol'
 };
-var rawDataset = { /* ... */};
+var rawDataset = { /* ... */ };
 
 before(createDataset.apply(rawDataset, dataset));
 
