@@ -2,12 +2,6 @@
 require('should');
 
 
-// createDataset(raw, cb)
-//   missing generator
-
-// createDataset.defer
-//   should work
-
 // createDataset(raw, dataset, cb)
 //   main use case
 
@@ -21,6 +15,7 @@ var Company = function(data) {
 
 var User = function(data) {
   this.name = data.name;
+  this.company = data.company;
 };
 
 var createDataset = require('../lib');
@@ -151,23 +146,57 @@ describe("createDataset(rawDataset, cb)", function() {
   });
 
   it("should respect dependencies order", function(done) {
-    var companyCalled = false;
+    var companyCalled;
+    var userCalled;
 
     createDataset.config = {
       company: {
         generator: function(data, cb) {
-          companyCalled = true;
-          cb(null, data);
+          companyCalled = new Date();
+          cb(null, new Company(data));
         }
       },
       user: {
         dependencies: ['company'],
         generator: function(data, cb) {
-          if(!companyCalled) {
-            throw new Error("User must be called after company is initialized");
-          }
-          cb(null, data);
-          done();
+          userCalled = new Date();
+          cb(null, new User(data));
+        }
+      }
+    };
+
+    var rawDataset = {
+      user: {
+        name: 'user'
+      },
+      company: {
+        name: 'company'
+      },
+    };
+
+    createDataset(rawDataset, function(err, dataset) {
+      if(err) {
+        return done(err);
+      }
+
+      dataset.should.have.keys(['company', 'user']);
+      companyCalled.should.be.below(userCalled);
+
+      done();
+    });
+  });
+
+  it("should call .defer before instantation", function(done) {
+    createDataset.config = {
+      company: {
+        generator: function(data, cb) {
+          cb(null, new Company(data));
+        }
+      },
+      user: {
+        dependencies: ['company'],
+        generator: function(data, cb) {
+          cb(null, new User(data));
         }
       }
     };
@@ -177,14 +206,61 @@ describe("createDataset(rawDataset, cb)", function() {
         name: 'company'
       },
       user: {
-        name: 'user'
+        name: 'user',
+        company: createDataset.defer('company')
       },
     };
 
-    createDataset(rawDataset, function(err) {
+    createDataset(rawDataset, function(err, dataset) {
       if(err) {
         return done(err);
       }
+
+      dataset.should.have.keys(['company', 'user']);
+      dataset.user.company.should.eql(dataset.company);
+
+      done();
+    });
+  });
+
+  it("should allow to specify dataset on which to build", function(done) {
+    createDataset.config = {
+      company: {
+        generator: function(data, cb) {
+          cb(null, new Company(data));
+        }
+      },
+      user: {
+        dependencies: ['company'],
+        generator: function(data, cb) {
+          cb(null, new User(data));
+        }
+      }
+    };
+
+    var dataset = {
+      someKey: 'someValue'
+    };
+
+    var rawDataset = {
+      company: {
+        name: 'company'
+      },
+      user: {
+        name: 'user',
+        company: createDataset.defer('company')
+      },
+    };
+
+    createDataset(rawDataset, dataset, function(err, dataset) {
+      if(err) {
+        return done(err);
+      }
+
+      dataset.should.have.keys(['company', 'user', 'someKey']);
+      dataset.user.company.should.eql(dataset.company);
+      dataset.should.have.property('someKey', 'someValue');
+      done();
     });
   });
 });
