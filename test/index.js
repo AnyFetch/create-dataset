@@ -175,6 +175,7 @@ describe("createDataset(rawDataset, cb)", function() {
       }
 
       dataset.should.have.keys(['company', 'user']);
+      userCalled.should.eql(true);
       companyCalled.should.eql(userCalled);
 
       done();
