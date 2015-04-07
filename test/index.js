@@ -1,13 +1,8 @@
 "use strict";
 require('should');
 
-
-// createDataset(raw, dataset, cb)
-//   main use case
-
 // createDataset.apply
 //   should work
-
 
 var Company = function(data) {
   this.name = data.name;
@@ -146,20 +141,20 @@ describe("createDataset(rawDataset, cb)", function() {
   });
 
   it("should respect dependencies order", function(done) {
-    var companyCalled;
+    var companyCalled = false;
     var userCalled;
 
     createDataset.config = {
       company: {
         generator: function(data, cb) {
-          companyCalled = new Date();
+          companyCalled = true;
           cb(null, new Company(data));
         }
       },
       user: {
         dependencies: ['company'],
         generator: function(data, cb) {
-          userCalled = new Date();
+          userCalled = companyCalled;
           cb(null, new User(data));
         }
       }
@@ -180,7 +175,8 @@ describe("createDataset(rawDataset, cb)", function() {
       }
 
       dataset.should.have.keys(['company', 'user']);
-      companyCalled.should.be.below(userCalled);
+      userCalled.should.eql(true);
+      companyCalled.should.eql(userCalled);
 
       done();
     });
