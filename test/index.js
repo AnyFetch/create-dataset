@@ -221,44 +221,44 @@ describe("createDataset(rawDataset, cb)", function() {
     });
   });
 
-  // it("should allow to specify dataset on which to build", function(done) {
-  //   createDataset.config = {
-  //     company: {
-  //       generator: function(data, cb) {
-  //         cb(null, new Company(data));
-  //       }
-  //     },
-  //     user: {
-  //       dependencies: ['company'],
-  //       generator: function(data, cb) {
-  //         cb(null, new User(data));
-  //       }
-  //     }
-  //   };
+  it("should allow to specify dataset on which to build", function(done) {
+    createDataset.config = {
+      company: {
+        generator: function(data, cb) {
+          cb(null, new Company(data));
+        }
+      },
+      user: {
+        dependencies: ['company'],
+        generator: function(data, cb) {
+          cb(null, new User(data));
+        }
+      }
+    };
 
-  //   var dataset = {
-  //     someKey: 'someValue'
-  //   };
+    var dataset = {
+      someKey: 'someValue'
+    };
 
-  //   var rawDataset = {
-  //     company: {
-  //       name: 'company'
-  //     },
-  //     user: {
-  //       name: 'user',
-  //       company: createDataset.defer('company')
-  //     },
-  //   };
+    var rawDataset = {
+      company: {
+        name: 'company'
+      },
+      user: {
+        name: 'user',
+        company: createDataset.defer('company')
+      },
+    };
 
-  //   createDataset(rawDataset, dataset, function(err, dataset) {
-  //     if(err) {
-  //       return done(err);
-  //     }
+    createDataset(rawDataset, dataset, function(err, dataset) {
+      if(err) {
+        return done(err);
+      }
 
-  //     dataset.should.have.keys(['company', 'user', 'someKey']);
-  //     dataset.user.company.should.eql(dataset.company);
-  //     dataset.should.have.property('someKey', 'someValue');
-  //     done();
-  //   });
-  // });
+      dataset.should.have.keys(['company', 'user', 'someKey']);
+      dataset.user.company.should.eql(dataset.company);
+      dataset.should.have.property('someKey', 'someValue');
+      done();
+    });
+  });
 });
