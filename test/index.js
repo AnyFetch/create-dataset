@@ -1,9 +1,6 @@
 "use strict";
 require('should');
 
-// createDataset(raw, dataset, cb)
-//   main use case
-
 // createDataset.apply
 //   should work
 
