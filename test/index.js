@@ -259,4 +259,39 @@ describe("createDataset(rawDataset, cb)", function() {
       done();
     });
   });
+
+  it("should match dependencies with models, not item names", function(done) {
+    createDataset.config = {
+      company: {
+        generator: function(data, cb) {
+          cb(null, new Company(data));
+        }
+      },
+      user: {
+        dependencies: ['company'],
+        generator: function(data, cb) {
+          cb(null, new User(data));
+        }
+      }
+    };
+
+    var rawDataset = {
+      companyTest: {
+        name: 'company'
+      },
+      userTest: {
+        name: 'user',
+        company: createDataset.defer('companyTest')
+      },
+    };
+
+    createDataset(rawDataset, function(err, dataset) {
+      if(err) {
+        return done(err);
+      }
+      dataset.should.have.keys(['companyTest', 'userTest']);
+      dataset.userTest.company.should.eql(dataset.companyTest);
+      done();
+    });
+  });
 });
