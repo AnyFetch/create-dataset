@@ -275,10 +275,6 @@ describe("createDataset(rawDataset, cb)", function() {
       }
     };
 
-    var dataset = {
-      someKey: 'someValue'
-    };
-
     var rawDataset = {
       companyTest: {
         name: 'company'
@@ -289,13 +285,12 @@ describe("createDataset(rawDataset, cb)", function() {
       },
     };
 
-    createDataset(rawDataset, dataset, function(err, dataset) {
+    createDataset(rawDataset, function(err, dataset) {
       if(err) {
         return done(err);
       }
-      dataset.should.have.keys(['companyTest', 'userTest', 'someKey']);
+      dataset.should.have.keys(['companyTest', 'userTest']);
       dataset.userTest.company.should.eql(dataset.companyTest);
-      dataset.should.have.property('someKey', 'someValue');
       done();
     });
   });
