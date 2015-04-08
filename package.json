@@ -1,6 +1,6 @@
 {
   "name": "create-dataset",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Matthieu Bacconnier <matthieu@anyfetch.com>",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive -R spec test/ -t 5000",
