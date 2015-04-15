@@ -1,10 +1,18 @@
 # Create dataset
+[![Build Status](https://travis-ci.org/AnyFetch/create-dataset.png?branch=master)](https://travis-ci.org/AnyFetch/create-dataset)
+[![Dependency Status](https://gemnasium.com/AnyFetch/create-dataset.png)](https://gemnasium.com/AnyFetch/create-dataset)
+[![NPM version](https://badge.fury.io/js/create-dataset.png)](http://badge.fury.io/js/create-dataset)
 
 When writing tests with Node, we often need to create complex objects interdependencies.
 
 Some patterns helps : factories, fixtures... but at the end of the day we still need to spend time managing our dependencies.
 
 This library tries to bring the best of both world: a simple JS object to define the structure, and nothing more. It is framework agnostic and will work for Mongo or SQL objects.
+
+## Installation
+```
+npm install create-dataset --save-dev
+```
 
 ## Example use
 For instance, to create a company, a user and a profile, one would simply write:
