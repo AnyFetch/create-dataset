@@ -1,6 +1,7 @@
 # Create dataset
 [![Build Status](https://travis-ci.org/AnyFetch/create-dataset.png?branch=master)](https://travis-ci.org/AnyFetch/create-dataset)
 [![Dependency Status](https://gemnasium.com/AnyFetch/create-dataset.png)](https://gemnasium.com/AnyFetch/create-dataset)
+[![Coverage Status](https://coveralls.io/repos/AnyFetch/create-dataset/badge.png?branch=master)](https://coveralls.io/r/AnyFetch/create-dataset?branch=master)
 [![NPM version](https://badge.fury.io/js/create-dataset.png)](http://badge.fury.io/js/create-dataset)
 
 When writing tests with Node, we often need to create complex objects interdependencies.
@@ -141,3 +142,26 @@ before(function(done) {
     createDataset(rawDataset, dataset, done);
 });
 ```
+
+### defer() and custom functions
+If you need a value that is not known at build time (e.g. the id of an object previously generated), you can specify a function instead of a value. This function takes as parameter the current `dataset` (with all previous dependencies already satisfied), for instance:
+
+```js
+// We define our dataset here
+var rawDataset = {
+    // Leave an empty object, to inherit all default values from some factory
+    company: {},
+
+    // Create a user, 
+    user1: {
+        // We can also override properties from the default values in the factory
+        name: "Some name",
+        // For the company, we'll use the id from the company we just created
+        company: function(dataset) {
+            return company.id;
+        }
+    },
+};
+```
+
+An helper function `createDataset.defer(key)` is provided. It simply returns `dataset[key]`.
