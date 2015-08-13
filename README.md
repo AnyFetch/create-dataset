@@ -34,7 +34,7 @@ var rawDataset = {
         // For the company, we'll use the id from the company we just created
         company: createDataset.defer("company")
     },
-    // Create another user with default values (and in another company, 
+    // Create another user with default values (and in another company)
     user2: {
     },
 
